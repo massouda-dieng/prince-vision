@@ -1,4 +1,10 @@
 #!/bin/bash
-pip install -r requirements.txt --break-system-packages
+set -e
+
+echo "==> Installation des dépendances..."
+pip install -r requirements.txt
+
+echo "==> Collecte des fichiers statiques..."
 python manage.py collectstatic --noinput
-python manage.py migrate --noinput
+
+echo "==> Build terminé ✓"
