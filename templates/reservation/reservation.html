@@ -1,0 +1,589 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Réserver une séance — TEOPICTURE{% endblock %}
+{% block extra_css %}
+<style>
+.page-hero{
+  padding:12rem 4rem 6rem;
+  text-align:center;
+  position:relative;
+  background:radial-gradient(ellipse at 50% 0%,rgba(212,175,55,.07) 0%,transparent 60%);
+  border-bottom:1px solid rgba(212,175,55,.1);
+}
+.page-hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,7vw,6rem);font-weight:300;margin-bottom:1rem;
+}
+.page-hero h1 em{color:var(--or);font-style:italic}
+.page-hero p{color:var(--gris);max-width:500px;margin:0 auto;line-height:1.8}
+
+.reservation-section{
+  padding:7rem 4rem;
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1.8fr;gap:5rem;align-items:start;
+}
+
+/* SIDEBAR INFO */
+.res-sidebar h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:300;margin-bottom:1.5rem;
+}
+.res-sidebar h3 em{color:var(--or);font-style:italic}
+.res-info-item{
+  display:flex;gap:1rem;margin-bottom:1.5rem;
+  padding-bottom:1.5rem;border-bottom:1px solid rgba(212,175,55,.1);
+}
+.res-info-icon{
+  width:42px;height:42px;border:1px solid rgba(212,175,55,.3);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--or);flex-shrink:0;
+}
+.res-info-label{
+  color:var(--gris);font-size:.75rem;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem;
+}
+.res-info-val{font-size:.95rem;color:var(--blanc)}
+
+.pricing-box{
+  margin-top:2.5rem;
+  background:#0d0d0d;border:1px solid rgba(212,175,55,.15);padding:1.5rem;
+}
+.pricing-box h4{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;color:var(--or);margin-bottom:1rem;
+}
+.pricing-row{
+  display:flex;justify-content:space-between;
+  padding:.5rem 0;border-bottom:1px solid rgba(212,175,55,.08);
+  font-size:.85rem;color:rgba(245,245,245,.7);
+}
+.pricing-row:last-child{border:none}
+.pricing-row span:last-child{color:var(--or)}
+
+/* FORMULAIRE */
+.res-form{
+  background:#0a0a0a;
+  border:1px solid rgba(212,175,55,.12);
+  padding:3rem;
+}
+.res-form h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.8rem;font-weight:300;margin-bottom:.5rem;
+}
+.res-form h3 em{color:var(--or);font-style:italic}
+.form-subtitle{color:var(--gris);font-size:.85rem;margin-bottom:2.5rem}
+
+.form-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;
+}
+.form-group{
+  display:flex;flex-direction:column;gap:.5rem;
+}
+.form-group.full{grid-column:span 2}
+.form-label{
+  font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(245,245,245,.5);font-weight:400;
+}
+.form-input{
+  background:#111;
+  border:1px solid rgba(212,175,55,.15);
+  color:var(--blanc);
+  padding:.9rem 1rem;
+  font-family:'Jost',sans-serif;font-size:.9rem;
+  outline:none;transition:border-color .3s,box-shadow .3s;
+  width:100%;
+  -webkit-appearance:none;
+}
+.form-input:focus{
+  border-color:var(--or);
+  box-shadow:0 0 0 3px rgba(212,175,55,.08);
+}
+.form-input option{background:#111;color:var(--blanc)}
+.form-error{color:#e55;font-size:.8rem}
+
+.form-submit{
+  margin-top:2rem;
+  width:100%;padding:1.1rem;
+  background:var(--or);color:var(--noir);
+  border:none;font-family:'Jost',sans-serif;
+  font-size:.85rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  cursor:none;transition:all .3s;position:relative;overflow:hidden;
+}
+.form-submit::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,.2);
+  transform:translateX(-100%);transition:transform .4s;
+}
+.form-submit:hover::before{transform:translateX(0)}
+.form-submit:hover{box-shadow:0 8px 30px rgba(212,175,55,.35);transform:translateY(-2px)}
+
+/* SUCCESS */
+.success-modal{
+  position:fixed;inset:0;background:rgba(5,5,5,.95);
+  z-index:8000;display:none;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;padding:2rem;
+}
+.success-modal.show{display:flex}
+.success-icon{
+  width:80px;height:80px;border:1px solid var(--or);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;color:var(--or);margin:0 auto 2rem;
+  animation:successPop .6s ease;
+}
+@keyframes successPop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-weight:300;color:var(--or);margin-bottom:1rem;
+}
+.success-text{color:rgba(245,245,245,.7);max-width:450px;line-height:1.8;margin-bottom:2.5rem}
+.success-close{
+  padding:.8rem 2.5rem;border:1px solid var(--or);
+  color:var(--or);background:none;font-family:'Jost',sans-serif;
+  font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;
+  cursor:none;transition:all .3s;text-decoration:none;display:inline-block;
+}
+.success-close:hover{background:var(--or);color:var(--noir)}
+
+/* ===== CUSTOM DATE & TIME PICKERS ===== */
+.custom-picker-wrap{position:relative}
+.picker-display{cursor:pointer!important;padding-right:3rem}
+.picker-icon{
+  position:absolute;right:1rem;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;color:var(--or);pointer-events:none;
+}
+
+/* CALENDRIER */
+.cal-dropdown{
+  position:absolute;top:calc(100% + 8px);left:0;z-index:500;
+  background:#0f0f0f;border:1px solid rgba(212,175,55,.3);
+  width:300px;padding:1.2rem;
+  display:none;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
+}
+.cal-dropdown.open{display:block;animation:dropIn .2s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-nav{
+  background:none;border:1px solid rgba(212,175,55,.2);
+  color:var(--or);width:28px;height:28px;cursor:pointer;
+  font-size:1rem;transition:all .2s;display:flex;align-items:center;justify-content:center;
+}
+.cal-nav:hover{background:rgba(212,175,55,.1);border-color:var(--or)}
+.cal-month-year{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--or);font-weight:400;text-transform:capitalize;letter-spacing:.05em}
+
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.4rem}
+.cal-weekdays span{text-align:center;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#555;padding:.3rem 0}
+
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-day{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;cursor:pointer;color:rgba(245,245,245,.7);
+  transition:all .15s;border:1px solid transparent;
+}
+.cal-day:hover:not(.disabled):not(.empty){background:rgba(212,175,55,.1);border-color:rgba(212,175,55,.3);color:var(--or)}
+.cal-day.selected{background:var(--or);color:var(--noir);font-weight:500}
+.cal-day.today{border-color:rgba(212,175,55,.4);color:var(--or)}
+.cal-day.disabled{color:#333;cursor:not-allowed}
+.cal-day.empty{cursor:default}
+.cal-day.other-month{color:#333}
+
+/* TIME PICKER */
+.time-dropdown{
+  position:absolute;top:calc(100% + 8px);left:0;z-index:500;
+  background:#0f0f0f;border:1px solid rgba(212,175,55,.3);
+  width:220px;padding:1.5rem;
+  display:none;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
+}
+.time-dropdown.open{display:block;animation:dropIn .2s ease}
+.time-picker-inner{display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:1.2rem}
+.time-col{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.time-arr{
+  background:none;border:1px solid rgba(212,175,55,.2);
+  color:var(--or);width:32px;height:28px;cursor:pointer;
+  font-size:.7rem;transition:all .2s;
+}
+.time-arr:hover{background:rgba(212,175,55,.1);border-color:var(--or)}
+.time-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.2rem;font-weight:300;color:var(--or);
+  width:60px;text-align:center;line-height:1;
+  border:1px solid rgba(212,175,55,.15);
+  padding:.3rem 0;background:#111;
+}
+.time-sep{font-size:2rem;color:var(--or);font-family:'Cormorant Garamond',serif;line-height:1;margin-top:-.5rem}
+.time-unit{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:#555}
+.time-confirm{
+  width:100%;padding:.65rem;background:var(--or);color:var(--noir);
+  border:none;font-family:'Jost',sans-serif;font-size:.75rem;
+  font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;
+}
+.time-confirm:hover{box-shadow:0 4px 20px rgba(212,175,55,.4)}
+
+@media(max-width:900px){
+  .reservation-section{grid-template-columns:1fr;gap:3rem;padding:4rem 1.5rem}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:span 1}
+  .res-form{padding:2rem 1.5rem}
+  .page-hero{padding:9rem 1.5rem 4rem}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <p class="section-label" style="justify-content:center">Réservation</p>
+  <h1>Réservez votre <em>séance</em></h1>
+  <p>Remplissez le formulaire ci-dessous et je vous contacterai dans les 24h pour confirmer votre réservation.</p>
+</div>
+
+<div class="reservation-section">
+  <!-- SIDEBAR -->
+  <aside class="res-sidebar reveal-left">
+    <h3>Votre séance,<br><em>nos engagements</em></h3>
+    <div class="gold-line"></div>
+    <div class="res-info-item">
+      <div class="res-info-icon">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.25 11.5 19.79 19.79 0 011.18 2.82 2 2 0 013.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 8.1a16 16 0 006 6l.62-.62a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="res-info-label">Téléphone</div>
+        <div class="res-info-val">+221 77 344 67 60</div>
+      </div>
+    </div>
+    <div class="res-info-item">
+      <div class="res-info-icon">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="res-info-label">Email</div>
+        <div class="res-info-val">Abdoukhoudossd66@gmail.com</div>
+      </div>
+    </div>
+    <div class="res-info-item">
+      <div class="res-info-icon">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div>
+        <div class="res-info-label">Réponse sous</div>
+        <div class="res-info-val">24 heures</div>
+      </div>
+    </div>
+    <div class="res-info-item">
+      <div class="res-info-icon">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+      </div>
+      <div>
+        <div class="res-info-label">Zone</div>
+        <div class="res-info-val">Dakar & tout le Sénégal</div>
+      </div>
+    </div>
+
+    <div class="pricing-box reveal">
+      <h4>Nos tarifs</h4>
+      <div class="pricing-row"><span>Shooting (3 photos)</span><span>4 000 FCFA</span></div>
+      <div class="pricing-row"><span>Shooting (6 photos)</span><span>5 000 FCFA</span></div>
+      <div class="pricing-row"><span>Shooting (9 photos)</span><span>7 000 FCFA</span></div>
+      <div class="pricing-row"><span>Baptême (40 photos)</span><span>50 000 FCFA</span></div>
+      <div class="pricing-row"><span>Baptême (60 photos)</span><span>75 000 FCFA</span></div>
+      <div class="pricing-row"><span>Mariage (60 photos)</span><span>75 000 FCFA</span></div>
+      <div class="pricing-row"><span>Mariage (100 photos)</span><span>120 000 FCFA</span></div>
+      <div class="pricing-row"><span>Vidéo cinématique</span><span>Sur demande</span></div>
+    </div>
+  </aside>
+
+  <!-- FORMULAIRE -->
+  <div class="res-form reveal">
+    <h3>Votre <em>réservation</em></h3>
+    <p class="form-subtitle">Tous les champs marqués * sont obligatoires.</p>
+
+    <form method="POST" action="{% url 'reservation' %}" id="resForm">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Nom complet *</label>
+          <input type="text" name="nom_complet" class="form-input" placeholder="Votre nom complet" required value="{{ form.nom_complet.value|default:'' }}">
+          {% if form.nom_complet.errors %}<span class="form-error">{{ form.nom_complet.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Téléphone *</label>
+          <input type="tel" name="telephone" class="form-input" placeholder="+221 XX XXX XX XX" required value="{{ form.telephone.value|default:'' }}">
+          {% if form.telephone.errors %}<span class="form-error">{{ form.telephone.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" name="email" class="form-input" placeholder="votre@email.com" required value="{{ form.email.value|default:'' }}">
+          {% if form.email.errors %}<span class="form-error">{{ form.email.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type d'événement *</label>
+          <select name="type_evenement" class="form-input" required>
+            <option value="">Choisissez...</option>
+            <option value="mariage">Mariage</option>
+            <option value="anniversaire">Anniversaire</option>
+            <option value="bapteme">Baptême</option>
+            <option value="shooting">Shooting</option>
+            <option value="korite">Korité</option>
+            <option value="tabaski">Tabaski</option>
+            <option value="evenementiel">Événementiel</option>
+            <option value="autre">Autre</option>
+          </select>
+          {% if form.type_evenement.errors %}<span class="form-error">{{ form.type_evenement.errors.0 }}</span>{% endif %}
+        </div>
+        <!-- DATE PICKER CUSTOM -->
+        <div class="form-group">
+          <label class="form-label">Date de l'événement *</label>
+          <div class="custom-picker-wrap" id="datePickerWrap">
+            <input type="text" id="dateDisplay" class="form-input picker-display" placeholder="JJ / MM / AAAA" readonly required>
+            <input type="hidden" name="date_evenement" id="dateHidden">
+            <svg class="picker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <!-- Calendrier custom -->
+            <div class="cal-dropdown" id="calDropdown">
+              <div class="cal-header">
+                <button type="button" class="cal-nav" id="calPrev">‹</button>
+                <span class="cal-month-year" id="calTitle"></span>
+                <button type="button" class="cal-nav" id="calNext">›</button>
+              </div>
+              <div class="cal-weekdays">
+                <span>Lu</span><span>Ma</span><span>Me</span><span>Je</span><span>Ve</span><span>Sa</span><span>Di</span>
+              </div>
+              <div class="cal-days" id="calDays"></div>
+            </div>
+          </div>
+          {% if form.date_evenement.errors %}<span class="form-error">{{ form.date_evenement.errors.0 }}</span>{% endif %}
+        </div>
+
+        <!-- HEURE PICKER CUSTOM -->
+        <div class="form-group">
+          <label class="form-label">Heure *</label>
+          <div class="custom-picker-wrap" id="timePickerWrap">
+            <input type="text" id="timeDisplay" class="form-input picker-display" placeholder="HH : MM" readonly required>
+            <input type="hidden" name="heure_evenement" id="timeHidden">
+            <svg class="picker-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <!-- Sélecteur heure -->
+            <div class="time-dropdown" id="timeDropdown">
+              <div class="time-picker-inner">
+                <div class="time-col">
+                  <button type="button" class="time-arr" id="hUp">▲</button>
+                  <div class="time-val" id="hVal">08</div>
+                  <button type="button" class="time-arr" id="hDown">▼</button>
+                  <div class="time-unit">H</div>
+                </div>
+                <div class="time-sep">:</div>
+                <div class="time-col">
+                  <button type="button" class="time-arr" id="mUp">▲</button>
+                  <div class="time-val" id="mVal">00</div>
+                  <button type="button" class="time-arr" id="mDown">▼</button>
+                  <div class="time-unit">MIN</div>
+                </div>
+              </div>
+              <button type="button" class="time-confirm" id="timeConfirm">Confirmer</button>
+            </div>
+          </div>
+          {% if form.heure_evenement.errors %}<span class="form-error">{{ form.heure_evenement.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Lieu de l'événement *</label>
+          <input type="text" name="lieu" class="form-input" placeholder="Adresse ou quartier, ville" required value="{{ form.lieu.value|default:'' }}">
+          {% if form.lieu.errors %}<span class="form-error">{{ form.lieu.errors.0 }}</span>{% endif %}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombre de personnes</label>
+          <input type="number" name="nombre_personnes" class="form-input" placeholder="Estimation" min="1" value="{{ form.nombre_personnes.value|default:'' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Budget estimé (FCFA)</label>
+          <input type="text" name="budget" class="form-input" placeholder="Ex: 75 000 FCFA" value="{{ form.budget.value|default:'' }}">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Message / Informations complémentaires</label>
+          <textarea name="message" class="form-input" rows="4" placeholder="Décrivez votre événement, vos souhaits particuliers...">{{ form.message.value|default:'' }}</textarea>
+        </div>
+      </div>
+      <button type="submit" class="form-submit">
+        ✦ &nbsp; Envoyer ma réservation &nbsp; ✦
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+{% if success %}
+<div class="success-modal show" id="successModal">
+  <div class="success-icon">✓</div>
+  <div class="success-title">Réservation envoyée !</div>
+  <p class="success-text">
+    Merci pour votre réservation. Nous avons bien reçu votre demande et nous vous contacterons dans les <strong style="color:var(--or)">24 heures</strong> pour confirmer les détails de votre séance.
+  </p>
+  <a href="{% url 'home' %}" class="success-close">Retour à l'accueil</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ============================
+// CALENDRIER CUSTOM
+// ============================
+const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+let calDate = new Date();
+let selectedDate = null;
+const todayDate = new Date(); todayDate.setHours(0,0,0,0);
+
+function renderCal(){
+  const year = calDate.getFullYear();
+  const month = calDate.getMonth();
+  document.getElementById('calTitle').textContent = MOIS[month] + ' ' + year;
+
+  const firstDay = new Date(year, month, 1);
+  let startDow = firstDay.getDay();
+  startDow = startDow === 0 ? 6 : startDow - 1; // Lundi = 0
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrev  = new Date(year, month, 0).getDate();
+
+  const grid = document.getElementById('calDays');
+  grid.innerHTML = '';
+
+  // Jours mois précédent (grisés)
+  for(let i = startDow - 1; i >= 0; i--){
+    const d = document.createElement('div');
+    d.className = 'cal-day other-month';
+    d.textContent = daysInPrev - i;
+    grid.appendChild(d);
+  }
+
+  // Jours du mois courant
+  for(let d = 1; d <= daysInMonth; d++){
+    const day = document.createElement('div');
+    day.className = 'cal-day';
+    day.textContent = d;
+
+    const thisDate = new Date(year, month, d);
+    thisDate.setHours(0,0,0,0);
+
+    if(thisDate < todayDate){
+      day.classList.add('disabled');
+    } else {
+      if(selectedDate &&
+         selectedDate.getDate()   === d &&
+         selectedDate.getMonth()  === month &&
+         selectedDate.getFullYear()=== year){
+        day.classList.add('selected');
+      }
+      if(thisDate.getTime() === todayDate.getTime()) day.classList.add('today');
+      day.addEventListener('click', ()=> selectCalDate(year, month, d));
+    }
+    grid.appendChild(day);
+  }
+}
+
+function selectCalDate(y, m, d){
+  selectedDate = new Date(y, m, d);
+  const dd = String(d).padStart(2,'0');
+  const mm = String(m+1).padStart(2,'0');
+  document.getElementById('dateDisplay').value  = dd + ' / ' + mm + ' / ' + y;
+  document.getElementById('dateHidden').value   = y + '-' + mm + '-' + dd;
+  document.getElementById('dateDisplay').style.borderColor = '';
+  renderCal();
+  closeCal();
+}
+
+function closeCal(){
+  document.getElementById('calDropdown').classList.remove('open');
+}
+
+document.getElementById('dateDisplay').addEventListener('click', e=>{
+  e.stopPropagation();
+  document.getElementById('timeDropdown').classList.remove('open');
+  const dd = document.getElementById('calDropdown');
+  dd.classList.toggle('open');
+  if(dd.classList.contains('open')) renderCal();
+});
+
+document.getElementById('calPrev').addEventListener('click', ()=>{ calDate.setMonth(calDate.getMonth()-1); renderCal(); });
+document.getElementById('calNext').addEventListener('click', ()=>{ calDate.setMonth(calDate.getMonth()+1); renderCal(); });
+
+// ============================
+// HEURE CUSTOM
+// ============================
+let hh = 8, mm = 0;
+function padZ(n){ return String(n).padStart(2,'0'); }
+function updateTimeVals(){
+  document.getElementById('hVal').textContent = padZ(hh);
+  document.getElementById('mVal').textContent = padZ(mm);
+}
+
+document.getElementById('hUp').addEventListener('click',   ()=>{ hh = (hh+1)%24;   updateTimeVals(); });
+document.getElementById('hDown').addEventListener('click', ()=>{ hh = (hh-1+24)%24; updateTimeVals(); });
+document.getElementById('mUp').addEventListener('click',   ()=>{ mm = (mm+15)%60;   updateTimeVals(); });
+document.getElementById('mDown').addEventListener('click', ()=>{ mm = (mm-15+60)%60; updateTimeVals(); });
+
+document.getElementById('timeConfirm').addEventListener('click', ()=>{
+  document.getElementById('timeDisplay').value = padZ(hh) + ' : ' + padZ(mm);
+  document.getElementById('timeHidden').value  = padZ(hh) + ':' + padZ(mm);
+  document.getElementById('timeDisplay').style.borderColor = '';
+  document.getElementById('timeDropdown').classList.remove('open');
+});
+
+document.getElementById('timeDisplay').addEventListener('click', e=>{
+  e.stopPropagation();
+  closeCal();
+  document.getElementById('timeDropdown').classList.toggle('open');
+});
+
+// Fermer en cliquant dehors
+document.addEventListener('click', ()=>{
+  closeCal();
+  document.getElementById('timeDropdown').classList.remove('open');
+});
+document.getElementById('calDropdown').addEventListener('click',  e=> e.stopPropagation());
+document.getElementById('timeDropdown').addEventListener('click', e=> e.stopPropagation());
+
+// Validation à la soumission
+document.getElementById('resForm').addEventListener('submit', function(e){
+  const dateH = document.getElementById('dateHidden').value;
+  const timeH = document.getElementById('timeHidden').value;
+  if(!dateH){
+    e.preventDefault();
+    const el = document.getElementById('dateDisplay');
+    el.style.borderColor = '#e55';
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  if(!timeH){
+    e.preventDefault();
+    const el = document.getElementById('timeDisplay');
+    el.style.borderColor = '#e55';
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+});
+
+// Init
+updateTimeVals();
+
+// Modal succès auto-fermeture
+const modal = document.getElementById('successModal');
+if(modal){
+  setTimeout(()=>{
+    modal.style.opacity = '0';
+    modal.style.transition = 'opacity .8s';
+    setTimeout(()=> modal.style.display = 'none', 800);
+  }, 5000);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{% block meta_desc %}TEOPICTURE — Prince Vision. Photographe professionnel au Sénégal. Mariages, Baptêmes, Anniversaires, Événements.{% endblock %}">
+<title>{% block title %}Prince Vision — Photographe Professionnel{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+{% load static %}
+<style>
+:root{
+  --noir:#050505;--or:#D4AF37;--or-clair:#e8c84a;
+  --or-sombre:#9a7d1a;--blanc:#F5F5F5;--gris:#888;--gris-sombre:#222;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#050505;color:var(--blanc);
+  font-family:'Jost',sans-serif;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ==========================================
+   NAVBAR STRUCTURELLE ALIGNÉE
+   ========================================== */
+#navbar{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:2rem 4rem;
+  background:linear-gradient(to bottom, rgba(5,5,5,0.95), rgba(5,5,5,0.7) 50%, transparent);
+  backdrop-filter:blur(10px);
+  transition:all .4s ease;
+}
+#navbar.scrolled{
+  padding:1.1rem 4rem;
+  background:rgba(5,5,5,0.95);
+  border-bottom:1px solid rgba(212,175,55,0.1);
+}
+
+.nav-logo{
+  display:flex;
+  align-items:center;
+  text-decoration:none;
+}
+.nav-logo-img{
+  height:40px;
+  object-fit:contain;
+  transition:transform 0.3s ease;
+}
+.nav-logo:hover .nav-logo-img{
+  transform:scale(1.05);
+}
+
+.nav-links{display:flex;list-style:none;gap:3rem}
+.nav-links a{
+  color:var(--blanc);text-decoration:none;font-size:.8rem;
+  text-transform:uppercase;letter-spacing:3px;font-weight:300;
+  transition:color .3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-6px;left:0;width:0;height:1px;
+  background:var(--or);transition:width .3s ease;
+}
+.nav-links a:hover{color:var(--or)}
+.nav-links a:hover::after{width:100%}
+
+/* CONTENEUR FLEX DROIT UNIQUE (Admin + Réservez sur la même ligne) */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem; /* Espacement horizontal parfait entre les deux boutons */
+}
+
+/* Bouton Admin Premium discret */
+.btn-admin {
+  font-family: 'Jost', sans-serif;
+  font-size: .75rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.65);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  white-space: nowrap; /* Évite les retours à la ligne intempestifs */
+}
+.btn-admin:hover {
+  color: var(--or);
+  opacity: 1;
+}
+
+/* Bouton Réserver */
+.nav-cta{
+  font-family:'Jost',sans-serif;
+  font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--or);text-decoration:none;
+  border:1px solid rgba(212,175,55,0.35);
+  padding:.75rem 1.6rem;
+  transition:all .3s ease;
+  white-space: nowrap;
+}
+.nav-cta:hover{
+  background:var(--or);color:var(--noir);
+  box-shadow:0 0 15px rgba(212,175,55,0.2);
+}
+
+/* Hamburger et Menu Mobile */
+.hamburger{
+  display:none;flex-direction:column;gap:6px;cursor:pointer;z-index:1100;
+  background:transparent;border:none;outline:none;
+}
+.hamburger span{
+  width:26px;height:1px;background:var(--blanc);transition:.3s;
+}
+.mobile-menu{
+  position:fixed;inset:0;background:var(--noir);z-index:1050;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2.5rem;transform:translateX(100%);transition:transform .5s cubic-bezier(0.77,0,0.175,1);
+}
+.mobile-menu.open{transform:translateX(0)}
+.mobile-menu a{
+  color:var(--blanc);text-decoration:none;font-size:1.2rem;
+  text-transform:uppercase;letter-spacing:4px;font-family:'Cormorant Garamond',serif;
+}
+.mobile-menu .nav-cta{font-family:'Jost',sans-serif;font-size:.8rem}
+.mobile-menu .btn-admin-mobile{font-family:'Jost',sans-serif;font-size:.8rem;color:var(--or);text-transform:uppercase;letter-spacing:3px}
+
+/* Effets de curseur */
+.custom-cursor{
+  width:12px;height:12px;background:var(--or);border-radius:50%;
+  position:fixed;transform:translate(-50%,-50%);pointer-events:none;
+  z-index:9999;transition:width .2s,height .2s;mix-blend-mode:difference;
+}
+.cursor-ring{
+  width:36px;height:36px;border:1px solid rgba(212,175,55,.4);border-radius:50%;
+  position:fixed;transform:translate(-50%,-50%);pointer-events:none;
+  z-index:9998;transition:width .2s,height .2s,border-color .2s;
+}
+
+/* Animations Scroll */
+.reveal, .reveal-left{opacity:0;transition:all 1.2s cubic-bezier(0.215, 0.610, 0.355, 1)}
+.reveal{transform:translateY(40px)}
+.reveal-left{transform:translateX(-40px)}
+.reveal.visible, .reveal-left.visible{opacity:1;transform:translate(0)}
+
+/* Footer */
+.footer-nav{
+  background:#090909;border-top:1px solid #151515;padding:5rem 2rem;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;
+}
+.footer-col h4{
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;
+  color:var(--or);margin-bottom:1.5rem;letter-spacing:2px;font-weight:400;
+}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.8rem}
+.footer-col a{color:var(--gris);text-decoration:none;font-size:.85rem;transition:color .3s}
+.footer-col a:hover{color:var(--or)}
+
+/* RESPONSIVE DESIGN */
+@media(max-width:1024px){
+  #navbar{padding:1.5rem 2rem}
+  .nav-links, .nav-actions{display:none !important} /* Cache proprement tout l'ensemble sur mobile/tablette */
+  .hamburger{display:flex}
+}
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<div class="custom-cursor" id="cursor"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav id="navbar">
+  <a href="{% url 'home' %}" class="nav-logo">
+    <img src="{% static 'images/logo_pv_gold.png' %}" alt="Prince Vision" class="nav-logo-img">
+  </a>
+  
+  <ul class="nav-links">
+    <li><a href="{% url 'home' %}">Accueil</a></li>
+    <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
+    <li><a href="{% url 'services' %}">Services</a></li>
+    <li><a href="{% url 'contact' %}">Contact</a></li>
+  </ul>
+  
+  <div class="nav-actions">
+    {% if user.is_authenticated and user.is_staff %}
+      <a href="{% url 'dashboard_home' %}" class="btn-admin">Dashboard</a>
+    {% else %}
+      <a href="{% url 'dashboard_login' %}" class="btn-admin">Admin</a>
+    {% endif %}
+    
+    <a href="{% url 'reservation' %}" class="nav-cta">Réservez</a>
+  </div>
+
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="{% url 'home' %}" onclick="closeMobile()">Accueil</a>
+  <a href="{% url 'portfolio' %}" onclick="closeMobile()">Portfolio</a>
+  <a href="{% url 'services' %}" onclick="closeMobile()">Services</a>
+  <a href="{% url 'contact' %}" onclick="closeMobile()">Contact</a>
+  <a href="{% url 'reservation' %}" class="nav-cta" onclick="closeMobile()">Réservez</a>
+  {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'dashboard_home' %}" class="btn-admin-mobile" onclick="closeMobile()">Dashboard</a>
+  {% else %}
+    <a href="{% url 'dashboard_login' %}" class="btn-admin-mobile" onclick="closeMobile()">Admin</a>
+  {% endif %}
+</div>
+
+{% block content %}
+{% endblock %}
+
+<footer class="footer-nav">
+  <div class="footer-col">
+    <img src="{% static 'images/logo_pv_gold.png' %}" alt="Prince Vision" style="height:45px;margin-bottom:1.5rem">
+    <p style="color:var(--gris);font-size:.85rem;line-height:1.6">Créateur de souvenirs haut de gamme à travers le Sénégal. Spécialisé dans la capture d'émotions authentiques et spontanées.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Navigation</h4>
+    <ul>
+      <li><a href="{% url 'home' %}">Accueil</a></li>
+      <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
+      <li><a href="{% url 'services' %}">Services</a></li>
+      <li><a href="{% url 'reservation' %}">Réservation</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Prestations</h4>
+    <ul>
+      <li><a href="{% url 'services' %}">Mariage</a></li>
+      <li><a href="{% url 'services' %}">Baptême</a></li>
+      <li><a href="{% url 'services' %}">Anniversaire</a></li>
+      <li><a href="{% url 'services' %}">Shooting</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Contact</h4>
+    <p style="color:var(--gris);font-size:.85rem;line-height:1.6">Dakar, Sénégal<br>Tel: +221 77 344 67 60<br>Email: contact@princevision.com</p>
+  </div>
+</footer>
+
+<script>
+// EFFET DE CURSEUR CUSTOMISÉ
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+(function animRing(){ry+=(my-ry)*.12;rx+=(mx-rx)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+document.querySelectorAll('a,button,#hamburger').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='20px';cursor.style.height='20px';ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(212,175,55,.7)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='12px';cursor.style.height='12px';ring.style.width='36px';ring.style.height='36px';ring.style.borderColor='rgba(212,175,55,.4)'});
+});
+
+// EFFET DE SCROLL NAVBAR
+const nav=document.getElementById('navbar');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>60));
+
+// MENU HAMBURGER MOBILE
+const ham=document.getElementById('hamburger');
+const mob=document.getElementById('mobileMenu');
+ham.addEventListener('click',()=>mob.classList.toggle('open'));
+function closeMobile(){mob.classList.remove('open')}
+
+// REVEAL ANIMATIONS
+const reveals=document.querySelectorAll('.reveal,.reveal-left');
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.1});
+reveals.forEach(el=>obs.observe(el));
+</script>
+
+{% block extra_js %}
+{% endblock %}
+</body>
+</html>

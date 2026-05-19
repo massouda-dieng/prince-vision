@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Services & Tarifs — TEOPICTURE{% endblock %}
+{% block extra_css %}
+<style>
+.page-hero{
+  padding:12rem 4rem 6rem;text-align:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(212,175,55,.07) 0%,transparent 60%);
+  border-bottom:1px solid rgba(212,175,55,.1);
+}
+.page-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,6rem);font-weight:300;margin-bottom:1rem}
+.page-hero h1 em{color:var(--or);font-style:italic}
+.page-hero p{color:var(--gris);max-width:500px;margin:0 auto;line-height:1.8}
+
+.services-section{padding:7rem 4rem;max-width:1200px;margin:0 auto}
+
+.service-block{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  margin-bottom:2px;overflow:hidden;
+  border:1px solid rgba(212,175,55,.08);
+  transition:border-color .4s;
+}
+.service-block:hover{border-color:rgba(212,175,55,.25)}
+.service-block:nth-child(even){direction:rtl}
+.service-block:nth-child(even) > *{direction:ltr}
+
+.service-block-img{
+  position:relative;overflow:hidden;aspect-ratio:4/3;
+}
+.service-block-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(.6) grayscale(.1);
+  transition:filter .6s,transform .7s;
+}
+.service-block:hover .service-block-img img{filter:brightness(.8) grayscale(0);transform:scale(1.04)}
+.service-block-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(212,175,55,.1) 0%,transparent 60%);
+}
+
+.service-block-content{
+  padding:4rem;background:#0a0a0a;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.service-block-badge{
+  display:inline-block;
+  border:1px solid rgba(212,175,55,.3);
+  color:var(--or);padding:.3rem .9rem;
+  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:1.5rem;width:fit-content;
+}
+.service-block-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.5rem;font-weight:300;margin-bottom:1rem;
+  line-height:1.1;
+}
+.service-block-desc{color:var(--gris);line-height:1.8;font-size:.95rem;margin-bottom:2rem}
+
+.pricing-table{margin-bottom:2rem}
+.pricing-table-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.7rem 0;border-bottom:1px solid rgba(212,175,55,.08);
+  font-size:.9rem;
+}
+.pricing-table-row:last-child{border:none}
+.pricing-table-row span:first-child{color:rgba(245,245,245,.7)}
+.pricing-table-row span:last-child{color:var(--or);font-weight:500}
+
+.service-block-cta{
+  display:inline-flex;align-items:center;gap:.8rem;
+  color:var(--or);text-decoration:none;
+  font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;
+  border:1px solid rgba(212,175,55,.3);
+  padding:.7rem 1.5rem;width:fit-content;
+  transition:all .3s;
+}
+.service-block-cta:hover{background:var(--or);color:var(--noir)}
+.service-block-cta svg{width:16px;height:16px;transition:transform .3s}
+.service-block-cta:hover svg{transform:translateX(4px)}
+
+/* CTA SECTION */
+.cta-band{
+  background:#0d0d0d;border-top:1px solid rgba(212,175,55,.1);
+  border-bottom:1px solid rgba(212,175,55,.1);
+  padding:6rem 4rem;text-align:center;
+}
+.cta-band h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,5vw,3.5rem);font-weight:300;
+  margin-bottom:1rem;
+}
+.cta-band h2 em{color:var(--or);font-style:italic}
+.cta-band p{color:var(--gris);margin-bottom:2.5rem;max-width:450px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+
+@media(max-width:768px){
+  .page-hero{padding:9rem 1.5rem 4rem}
+  .services-section{padding:4rem 1.5rem}
+  .service-block{grid-template-columns:1fr;direction:ltr!important}
+  .service-block:nth-child(even) > *{direction:ltr}
+  .service-block-img{aspect-ratio:16/9}
+  .service-block-content{padding:2rem 1.5rem}
+  .cta-band{padding:4rem 1.5rem}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <p class="section-label" style="justify-content:center">Prestations</p>
+  <h1>Mes <em>Services</em></h1>
+  <p>Des formules pensées pour chaque occasion, avec des tarifs transparents et une qualité professionnelle garantie.</p>
+</div>
+
+<div class="services-section">
+
+  <!-- MARIAGE -->
+  <div class="service-block reveal">
+    <div class="service-block-img">
+      <img src="{% static 'images/mariage1.jpeg' %}" alt="Mariage">
+      <div class="service-block-img-overlay"></div>
+    </div>
+    <div class="service-block-content">
+      <span class="service-block-badge">Premium</span>
+      <h2 class="service-block-name">Shooting<br>Mariage</h2>
+      <p class="service-block-desc">Couverture complète de votre plus beau jour. Des préparatifs à la soirée, chaque instant précieux est immortalisé avec un regard artistique et une technique irréprochable.</p>
+      <div class="pricing-table">
+        <div class="pricing-table-row"><span>60 photos retouchées</span><span>75 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>80 photos retouchées</span><span>95 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>100 photos retouchées</span><span>120 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>Vidéo cinématique</span><span>Sur demande</span></div>
+        <div class="pricing-table-row"><span>Album souvenir</span><span>Sur demande</span></div>
+      </div>
+      <a href="{% url 'reservation' %}" class="service-block-cta">
+        Réserver
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- BAPTÊME -->
+  <div class="service-block reveal">
+    <div class="service-block-img">
+      <img src="{% static 'images/bapteme1.jpeg' %}" alt="Baptême">
+      <div class="service-block-img-overlay"></div>
+    </div>
+    <div class="service-block-content">
+      <span class="service-block-badge">Famille</span>
+      <h2 class="service-block-name">Shooting<br>Baptême</h2>
+      <p class="service-block-desc">Immortalisez ce moment de grâce et de joie familiale. La cérémonie du baptême est un instant unique que nos photos sauront préserver pour l'éternité.</p>
+      <div class="pricing-table">
+        <div class="pricing-table-row"><span>40 photos retouchées</span><span>50 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>60 photos retouchées</span><span>75 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>80 photos retouchées</span><span>95 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>Vidéo souvenir</span><span>Sur demande</span></div>
+        <div class="pricing-table-row"><span>Album souvenir</span><span>Sur demande</span></div>
+      </div>
+      <a href="{% url 'reservation' %}" class="service-block-cta">
+        Réserver
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ANNIVERSAIRE -->
+  <div class="service-block reveal">
+    <div class="service-block-img">
+      <img src="{% static 'images/anniv1.jpeg' %}" alt="Anniversaire">
+      <div class="service-block-img-overlay"></div>
+    </div>
+    <div class="service-block-content">
+      <span class="service-block-badge">Célébration</span>
+      <h2 class="service-block-name">Shooting<br>Anniversaire</h2>
+      <p class="service-block-desc">Chaque anniversaire est une nouvelle page de votre histoire. Laissez-nous capturer les rires, les surprises et la complicité qui font la magie de cette célébration.</p>
+      <div class="pricing-table">
+        <div class="pricing-table-row"><span>40 photos retouchées</span><span>50 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>60 photos retouchées</span><span>75 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>80 photos retouchées</span><span>95 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>Album souvenir</span><span>Sur demande</span></div>
+      </div>
+      <a href="{% url 'reservation' %}" class="service-block-cta">
+        Réserver
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- SHOOTING -->
+  <div class="service-block reveal">
+    <div class="service-block-img">
+      <img src="{% static 'images/shooting1.jpeg' %}" alt="Shooting">
+      <div class="service-block-img-overlay"></div>
+    </div>
+    <div class="service-block-content">
+      <span class="service-block-badge">Créatif</span>
+      <h2 class="service-block-name">Shooting<br>Personnalisé</h2>
+      <p class="service-block-desc">Une séance photo créative et personnalisée, adaptée à votre vision. Portraits, mode, lookbook — nous créons ensemble des images qui vous ressemblent.</p>
+      <div class="pricing-table">
+        <div class="pricing-table-row"><span>3 photos retouchées</span><span>4 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>6 photos retouchées</span><span>5 000 FCFA</span></div>
+        <div class="pricing-table-row"><span>9 photos retouchées</span><span>7 000 FCFA</span></div>
+      </div>
+      <a href="{% url 'reservation' %}" class="service-block-cta">
+        Réserver
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- KORITÉ & TABASKI -->
+  <div class="service-block reveal">
+    <div class="service-block-img">
+      <img src="{% static 'images/autres1.jpeg' %}" alt="Korité Tabaski">
+      <div class="service-block-img-overlay"></div>
+    </div>
+    <div class="service-block-content">
+      <span class="service-block-badge">Culturel</span>
+      <h2 class="service-block-name">Korité &<br>Tabaski</h2>
+      <p class="service-block-desc">Les fêtes religieuses sont des moments de rassemblement et de partage uniques dans la culture sénégalaise. Gardez en mémoire ces instants précieux en famille avec des photos d'exception.</p>
+      <div class="pricing-table">
+        <div class="pricing-table-row"><span>Formule standard</span><span>Sur devis</span></div>
+        <div class="pricing-table-row"><span>Formule premium</span><span>Sur devis</span></div>
+        <div class="pricing-table-row"><span>Album souvenir</span><span>Sur demande</span></div>
+      </div>
+      <a href="{% url 'reservation' %}" class="service-block-cta">
+        Réserver
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <h2>Vous avez un <em>projet</em> en tête ?</h2>
+  <p>Contactez-nous pour discuter de votre événement et obtenir un devis personnalisé.</p>
+  <div class="cta-btns">
+    <a href="{% url 'reservation' %}" class="btn-primary">Réserver maintenant</a>
+    <a href="https://wa.me/221773446760" target="_blank" class="btn-outline">Discuter sur WhatsApp</a>
+  </div>
+</div>
+{% endblock %}
