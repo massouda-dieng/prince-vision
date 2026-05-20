@@ -5,7 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'teopicture.settings')
 
 application = get_wsgi_application()
 
-# Migrations automatiques au démarrage du serveur
+# Migrations automatiques au démarrage (Vercel serverless)
 try:
     from django.core.management import call_command
     call_command('migrate', verbosity=0)
