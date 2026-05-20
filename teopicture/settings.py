@@ -8,11 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ─── Sécurité ─────────────────────────────────────────────────────────────────
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-production')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='*.vercel.app,localhost,127.0.0.1',
-    cast=lambda v: [s.strip() for s in v.split(',')]
-)
+CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
 
 # ─── Applications ──────────────────────────────────────────────────────────────
 CLOUDINARY_CLOUD_NAME = config('CLOUDINARY_CLOUD_NAME', default='')
