@@ -90,6 +90,7 @@ def dashboard_portfolio(request):
     })
 
 @login_required(login_url='/admin-dashboard/login/')
+@login_required(login_url='/admin-dashboard/login/')
 def upload_photo(request):
     if request.method == 'POST':
         image = request.FILES.get('image')
