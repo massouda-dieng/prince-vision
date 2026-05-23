@@ -100,3 +100,18 @@ if not DEBUG:
         default='https://*.vercel.app',
         cast=lambda v: [s.strip() for s in v.split(',')]
     )
+
+# Cloudinary
+import cloudinary
+import cloudinary_storage
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME', default=''),
+    'API_KEY': config('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default=''),
+}
+
+CLOUDINARY_CLOUD_NAME = config('CLOUDINARY_CLOUD_NAME', default='')
+if CLOUDINARY_CLOUD_NAME:
+    INSTALLED_APPS = ['cloudinary_storage', 'cloudinary'] + INSTALLED_APPS
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
