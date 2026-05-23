@@ -323,11 +323,7 @@
           <input type="tel" name="telephone" class="form-input" placeholder="+221 XX XXX XX XX" required value="{{ form.telephone.value|default:'' }}">
           {% if form.telephone.errors %}<span class="form-error">{{ form.telephone.errors.0 }}</span>{% endif %}
         </div>
-        <div class="form-group">
-          <label class="form-label">Email *</label>
-          <input type="email" name="email" class="form-input" placeholder="votre@email.com" required value="{{ form.email.value|default:'' }}">
-          {% if form.email.errors %}<span class="form-error">{{ form.email.errors.0 }}</span>{% endif %}
-        </div>
+
         <div class="form-group">
           <label class="form-label">Type d'événement *</label>
           <select name="type_evenement" class="form-input" required>
