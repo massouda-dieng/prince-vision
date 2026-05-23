@@ -35,8 +35,7 @@
 .hero-left-img {
   position: absolute;
   inset: 0;
-  background: url("{% static 'images/diop.jpg' %}") center/cover 
-no-repeat;
+  background: url("{% static 'images/diop.jpg' %}") center/cover no-repeat;
   filter: brightness(.55) contrast(1.05) saturate(.9);
   transform: scale(1.04);
   animation: imgScale 14s ease-in-out infinite alternate;
@@ -264,7 +263,6 @@ no-repeat;
 /* =========================================================
    STYLE GLOBAL DES BOUTONS DU SITE (PREMIUM BLACK & GOLD)
 ========================================================= */
-/* 1. Bouton Principal (Plein / Or) — Valable partout */
 .btn-primary {
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
@@ -297,7 +295,6 @@ no-repeat;
   transform: translateX(5px);
 }
 
-/* 2. Bouton Secondaire (Bordure / Outline) — Valable partout */
 .btn-outline {
   font-family: 'Jost', sans-serif;
   font-size: 0.75rem;
@@ -466,60 +463,18 @@ no-repeat;
 
 /* PORTFOLIO PREVIEW */
 .portfolio-section { padding: 8rem 4rem; }
-.portfolio-header { max-width: 1200px; margin: 0 auto 3rem; 
-display: flex; justify-content: space-between; align-items: 
-flex-end,portfolio-grid <div class="portfolio-grid">
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/mariage1.jpeg' %}" 
-alt="Mariage" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Mariage</div>
-        </div>
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/bapteme1.jpeg' %}" 
-alt="Baptême" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Baptême</div>
-        </div>
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/shooting1.jpeg' %}" 
-alt="Shooting" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div 
-class="portfolio-item-label">Shooting</div>
-        </div>
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/mariage2.jpeg' %}" 
-alt="Mariage" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Mariage</div>
-        </div>
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/tabaski.jpg' %}" 
-alt="Tabaski" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Tabaski</div>
-        </div>
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/tabaski1.jpg' %}" 
-alt="Tabaski" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Tabaski</div>
-        </div>
-        <div class="portfolio-item reveal">
-            <img src="{% static 'images/hero1.jpg' %}" 
-alt="Tabaski" loading="lazy">
-            <div class="portfolio-item-overlay"><div 
-class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Tabaski</div>
-        </div>
-    </div>
+.portfolio-header { max-width: 1200px; margin: 0 auto 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
+.portfolio-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 220px; gap: 3px; }
+.portfolio-item { overflow: hidden; position: relative; background: #111; cursor: none; }
+.portfolio-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+.portfolio-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease, filter .7s ease; filter: brightness(.65); }
+.portfolio-item:hover img { transform: scale(1.08); filter: brightness(.9); }
+.portfolio-item-overlay { position: absolute; inset: 0; background: rgba(5,5,5,0); display: flex; align-items: center; justify-content: center; transition: background .4s; }
+.portfolio-item:hover .portfolio-item-overlay { background: rgba(212,175,55,.08); }
+.portfolio-item-icon { width: 48px; height: 48px; border: 1px solid rgba(245,245,245,.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transform: scale(.6); transition: all .4s; color: white; font-size: 1.4rem; }
+.portfolio-item:hover .portfolio-item-icon { opacity: 1; transform: scale(1); }
+.portfolio-item-label { position: absolute; bottom: 1rem; left: 1rem; color: rgba(245,245,245,.7); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; opacity: 0; transition: opacity .4s; }
+.portfolio-item:hover .portfolio-item-label { opacity: 1; }
 
 /* TESTIMONIALS */
 .testimonials-section { padding: 8rem 4rem; background: #060606; }
@@ -756,8 +711,15 @@ class="portfolio-item-icon">+</div></div>
             </div>
             <a href="{% url 'reservation' %}" class="service-card-link">→</a>
         </div>
-    </
- </div>
+    </div>
+</section>
+
+<section class="portfolio-section">
+    <div class="portfolio-header">
+        <div>
+            <p class="section-label reveal-left">Galerie</p>
+            <h2 class="section-title reveal-left">Le regard<br><em>qui raconte</em></h2>
+        </div>
         <a href="{% url 'portfolio' %}" class="btn-outline reveal">Voir tout le portfolio →</a>
     </div>
     <div class="portfolio-grid">
@@ -772,11 +734,6 @@ class="portfolio-item-icon">+</div></div>
             <div class="portfolio-item-label">Baptême</div>
         </div>
         <div class="portfolio-item reveal">
-            <img src="{% static 'images/anniv1.jpeg' %}" alt="Anniversaire" loading="lazy">
-            <div class="portfolio-item-overlay"><div class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Anniversaire</div>
-        </div>
-        <div class="portfolio-item reveal">
             <img src="{% static 'images/shooting1.jpeg' %}" alt="Shooting" loading="lazy">
             <div class="portfolio-item-overlay"><div class="portfolio-item-icon">+</div></div>
             <div class="portfolio-item-label">Shooting</div>
@@ -787,14 +744,19 @@ class="portfolio-item-icon">+</div></div>
             <div class="portfolio-item-label">Mariage</div>
         </div>
         <div class="portfolio-item reveal">
-            <img src="{% static 'images/autres1.jpeg' %}" alt="Événement" loading="lazy">
+            <img src="{% static 'images/hero.jpg' %}" alt="Tabaski" loading="lazy">
             <div class="portfolio-item-overlay"><div class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Événement</div>
+            <div class="portfolio-item-label">Tabaski</div>
         </div>
         <div class="portfolio-item reveal">
-            <img src="{% static 'images/anniv2.jpeg' %}" alt="Anniversaire" loading="lazy">
+            <img src="{% static 'images/hero1.jpg' %}" alt="Tabaski" loading="lazy">
             <div class="portfolio-item-overlay"><div class="portfolio-item-icon">+</div></div>
-            <div class="portfolio-item-label">Anniversaire</div>
+            <div class="portfolio-item-label">Tabaski</div>
+        </div>
+        <div class="portfolio-item reveal">
+            <img src="{% static 'images/tabaski1.jpg' %}" alt="Tabaski" loading="lazy">
+            <div class="portfolio-item-overlay"><div class="portfolio-item-icon">+</div></div>
+            <div class="portfolio-item-label">Tabaski</div>
         </div>
     </div>
 </section>
